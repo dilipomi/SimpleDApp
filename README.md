@@ -1,4 +1,4 @@
-# Create An Ethereum Dapp with Ethersjs
+# Create a simple dApp on Ethereum
 
  This is a step-by-step tutorial on how to create a front end, deploy a Solidity smart contract, and connect them together.
  We will use [Metamask](https://metamask.io), [Remix IDE](https://remix.ethereum.org) and [Ethersjs](https://github.com/ethers-io/ethers.js/).
@@ -54,24 +54,24 @@ The first step is to create a basic html page.
     </body>
  </html>
  ```
- We will create an app that simply reads and writes a value to the blockchain. We will need a label, an input,  and buttons.
+ We will create an app that simply reads and writes a value to the blockchain. We will need a label, an input, and buttons.
  6. Inside the body tag, add some text, a label and input.
  ```html
      <body>
-       <h1>This is my dApp!</h1>
-       <p> Here we can set or get the mood: </p>
-       <label for="mood">Input Mood:</label> <br>
-       <input type="text" id="mood">
+       <h1>This is my first simple dApp!</h1>
+       <p> Here we can set or get the name: </p>
+       <label for="name">Input Name:</label> <br>
+       <input type="text" id="name">
      </body>
   ```
 
  7. Inside the body tag  add some buttons.
  ```html
        <div>
-         <button onclick="getMood()"> get Mood </button>
+         <button onclick="getName()"> get Name </button>
        </div>
        <div>
-         <button onclick="setMood()"> set Mood</button>
+         <button onclick="setName()"> set Name</button>
        </div>
 
   ```
@@ -95,7 +95,7 @@ Now it is time to create a solidity smart contract.
    - Never used remix before? Checkout [This video](https://www.youtube.com/watch?v=pdJttvcAV1c)
 2. Go to remix.ethereum.org
 3. Check out the "Solidity Compiler", and "Deploy and Run Transactions" tabs. If they are not present, enable them in the plugin manager
-4. Create a new solidity file in remix, named `mood.sol`
+4. Create a new solidity file in remix, named `name.sol`
 5. Write the contract
    - Specify the solidity version
    ``` 
@@ -103,24 +103,24 @@ Now it is time to create a solidity smart contract.
    ```
    - Define the contract 
    ``` 
-    contract MoodDiary{
+    contract NameDiary{
     
     }
    ```
    - Inside the contract create a variable called mood
    ```
-    string mood;
+    string name;
    ```
    - Next, create Read and Write functions 
    ```
     //create a function that writes a mood to the smart contract
-    function setMood(string _mood) public{
-        mood = _mood;
+    function setName(string _name) public{
+        name = _name;
     }
     
     //create a function the reads the mood from the smart contract
-    function getMood() public view returns(string){
-        return mood;
+    function getName() public view returns(string){
+        return name;
     }
    ```
    - And that's it! your code 
@@ -181,9 +181,9 @@ var provider = new ethers.providers.Web3Provider(web3.currentProvider,'ropsten')
 4. Import the contract ABI ([what is that?](https://solidity.readthedocs.io/en/develop/abi-spec.html)) and specify the contract address on our provider's blockchain:
 
 ```javascript
-  var MoodContractAddress = "<contract address>";
-  var MoodContractABI = <contract ABI>
-  var MoodContract
+  var NameContractAddress = "<contract address>";
+  var NameContractABI = <contract ABI>
+  var NameContract
   var signer
 ```
 
@@ -192,23 +192,23 @@ var provider = new ethers.providers.Web3Provider(web3.currentProvider,'ropsten')
 ```javascript
 provider.listAccounts().then(function(accounts) {
       signer = provider.getSigner(accounts[0]);
-      MoodContract = new ethers.Contract(MoodContractAddress, MoodContractABI, signer);
+      NameContract = new ethers.Contract(NameContractAddress, NameContractABI, signer);
     })
 ```
 
 6. Create asynchronous functions to call your smart contract functions
 
 ```javascript
-  async function getMood(){
-    getMoodPromise = MoodContract.getMood();
-    var Mood = await getMoodPromise;
-    console.log(Mood);
+  async function getName(){
+    getNamePromise = NameContract.getName();
+    var Name = await getNamePromise;
+    console.log(Name);
   }
 
-  async function setMood(){
-    let mood = document.getElementById("mood").value
-    setMoodPromise = MoodContract.setMood("patient");
-    await setMoodPromise;
+  async function setName(){
+    let name = document.getElementById("name").value
+    setNamePromise = NameContract.setName("patient");
+    await setNamePromise;
   }
 ```
 
@@ -216,8 +216,8 @@ provider.listAccounts().then(function(accounts) {
 
 ```html
 
-<button onclick="getMood()"> get Mood </button>
-<button onclick = "setMood()"> set Mood</button>
+<button onclick="getName()"> get Name </button>
+<button onclick = "setName()"> set Name</button>
 ```
 ---
 
@@ -245,14 +245,14 @@ lite-server
 
 #### Try and use the following information to interact with an existing contract we published on the Roptsen testnet:
 
-- We have a `MoodDiary` contract instance created [at this transaction](https://ropsten.etherscan.io/tx/0x8da093fdc4ae3e1b469dfff97b414a9800c9fdd8c1c897b6b746faf43aa3b7f8)
+- We have a `NameDiary` contract instance created [at this transaction](https://ropsten.etherscan.io/tx/0x8da093fdc4ae3e1b469dfff97b414a9800c9fdd8c1c897b6b746faf43aa3b7f8)
 
 
 - Here is the contract ([on etherscan](https://ropsten.etherscan.io/address/0xc5afd2d92750612a9619db2282d9037c58fc22cb))
   - We also verified our source code to [ropsten.etherscan.io](https://ropsten.etherscan.io/address/0xc5afd2d92750612a9619db2282d9037c58fc22cb#code) as an added measure for you to verify what the contract is exactly, and also the ABI is available to _the world_! :grin:
 
 
-- The ABI is also in [this file](https://github.com/BlockDevsUnited/BasicFrontEndTutorial/blob/master/Mood_ABI.json)
+- The ABI is also in [this file](https://github.com/dilipomi/SimpleDApp/blob/master/Mood_ABI.json)
 
 
 #### This illustrates an important point: you can also build a dApp _without needing to write the Ethereum contract yourself_! If you want to use an existing contract written and already on Ethereum!
