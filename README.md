@@ -239,7 +239,6 @@ Celebrate! :bowtie: You just made a webpage that interacted with _a real live Et
 
 ```bash
 git clone https://github.com/dilipomi/SimpleDApp.git
-cd BasicFrontEndTutorial
 lite-server
 ```
 
